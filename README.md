@@ -8,12 +8,9 @@ Welcome to the **Webzenith 100-Day Bootcamp!** This comprehensive program is des
 
 - [About the Bootcamp](#about-the-bootcamp)
 - [Bootcamp Structure](#bootcamp-structure)
-- [Learning Path](#learning-path)
 - [Technologies Covered](#technologies-covered)
 - [Getting Started](#getting-started)
-- [Weekly Progress](#weekly-progress)
 - [Resources](#resources)
-- [Contributing](#contributing)
 
 ## 📖 About the Bootcamp
 
