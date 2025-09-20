@@ -96,6 +96,15 @@ jobs:
           </html>
           EOF
 
+      - name: List staged site contents (debug)
+        shell: bash
+        run: |
+          echo "Staged site structure:"
+          ls -la site || true
+          echo "Top-level week folders:"
+          ls -la site | sed -n '1,200p' || true
+          echo "Files under WEEK-3:" && (ls -la site/WEEK-3 || true)
+
       - name: Upload Pages artifact (multi-week site)
         uses: actions/upload-pages-artifact@v3
         with:
