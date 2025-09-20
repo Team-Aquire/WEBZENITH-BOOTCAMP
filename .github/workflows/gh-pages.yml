@@ -3,10 +3,23 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
+  workflow_dispatch:
+
+# Grant the minimum required permissions
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent concurrent deployments
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
+    name: Build site
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,10 +38,77 @@ jobs:
         working-directory: WEEK-3
         run: npm run build
 
-      - name: Deploy WEEK-3/dist to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: "Optional: Install & Build Week 4 (if present)"
+        if: ${{ hashFiles('WEEK-4/package.json') != '' }}
+        working-directory: WEEK-4
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          npm run build
+
+      - name: Stage multi-week site
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          rm -rf site
+          mkdir -p site
+          # Copy static weeks if present
+          if [ -d "WEEK-1" ]; then cp -r WEEK-1 site/WEEK-1; fi
+          if [ -d "WEEK-2" ]; then cp -r WEEK-2 site/WEEK-2; fi
+          # Copy Week 3 build output
+          if [ -d "WEEK-3/dist" ]; then mkdir -p site/WEEK-3 && cp -r WEEK-3/dist/* site/WEEK-3/; fi
+          # Copy Week 4 build output (support Vite dist/ or CRA build/)
+          if [ -d "WEEK-4/dist" ]; then mkdir -p site/WEEK-4 && cp -r WEEK-4/dist/* site/WEEK-4/; fi
+          if [ -d "WEEK-4/build" ]; then mkdir -p site/WEEK-4 && cp -r WEEK-4/build/* site/WEEK-4/; fi
+          # Generate root index.html with links to weeks
+          cat > site/index.html << 'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>WEBZENITH Bootcamp – Weeks</title>
+            <meta name="color-scheme" content="light dark" />
+            <style>
+              body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif; margin: 2rem; line-height: 1.6; }
+              h1 { margin-bottom: 1rem; }
+              ul { padding-left: 1.2rem; }
+              a { color: #2563eb; text-decoration: none; }
+              a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <h1>WEBZENITH Bootcamp</h1>
+            <p>Select a week:</p>
+            <ul>
+          EOF
+          for d in site/WEEK-*; do
+            if [ -d "$d" ]; then
+              name=$(basename "$d")
+              echo "              <li><a href=\"./$name/\">$name</a></li>" >> site/index.html
+            fi
+          done
+          cat >> site/index.html << 'EOF'
+            </ul>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload Pages artifact (multi-week site)
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: WEEK-3/dist
-          # Optional: keep history disabled for smaller repo
-          keep_files: false
+          path: site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
