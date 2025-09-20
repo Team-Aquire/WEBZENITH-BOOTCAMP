@@ -1,0 +1,15 @@
+{
+  "name": "todo-typescript",
+  "version": "1.0.0",
+  "description": "Week 3 - To-Do App with TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "serve": "live-server dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "live-server": "^1.2.2"
+  }
+}
