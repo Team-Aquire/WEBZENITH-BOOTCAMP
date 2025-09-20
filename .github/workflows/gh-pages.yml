@@ -121,6 +121,14 @@ jobs:
             exit 1
           fi
 
+      - name: "Guard: ensure Week 3 script exists"
+        shell: bash
+        run: |
+          if ! compgen -G "site/WEEK-3/*.js" > /dev/null; then
+            echo "ERROR: No JS found under site/WEEK-3. Ensure tsc outputs dist/*.js and staging copies it." >&2
+            exit 1
+          fi
+
       - name: Upload site as debug artifact
         uses: actions/upload-artifact@v4
         with:
