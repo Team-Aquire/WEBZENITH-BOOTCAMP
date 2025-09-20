@@ -9,9 +9,26 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Deploy static site to GitHub Pages
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies (Week 3)
+        working-directory: WEEK-3
+        run: npm ci
+
+      - name: Build (TypeScript -> dist)
+        working-directory: WEEK-3
+        run: npm run build
+
+      - name: Deploy WEEK-3/dist to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./   # or ./docs if your HTML is there
+          publish_dir: WEEK-3/dist
+          # Optional: keep history disabled for smaller repo
+          keep_files: false
