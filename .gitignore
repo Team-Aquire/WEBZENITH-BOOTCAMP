@@ -1,13 +1,6 @@
 # Dependencies
 node_modules/
 
-# Build output (TypeScript compiled files)
-build/
-# Ignore source maps globally, but allow JS except in build dirs
-*.js.map
-# Ignore compiled JS inside common build output directories
-**/build/*.js
-
 # Logs
 *.log
 npm-debug.log*
