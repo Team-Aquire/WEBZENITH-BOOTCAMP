@@ -57,8 +57,16 @@ jobs:
           # Copy static weeks if present
           if [ -d "WEEK-1" ]; then cp -r WEEK-1 site/WEEK-1; fi
           if [ -d "WEEK-2" ]; then cp -r WEEK-2 site/WEEK-2; fi
-          # Copy Week 3 build output
-          if [ -d "WEEK-3/dist" ]; then mkdir -p site/WEEK-3 && cp -r WEEK-3/dist/* site/WEEK-3/; fi
+          # Stage Week 3: prefer root HTML/CSS + compiled JS from dist
+          mkdir -p site/WEEK-3
+          # Copy HTML (prefer dist if present, else root)
+          if [ -f "WEEK-3/dist/index.html" ]; then cp WEEK-3/dist/index.html site/WEEK-3/; elif [ -f "WEEK-3/index.html" ]; then cp WEEK-3/index.html site/WEEK-3/; fi
+          # Copy CSS (prefer dist if present, else root)
+          if [ -f "WEEK-3/dist/styles.css" ]; then cp WEEK-3/dist/styles.css site/WEEK-3/; elif [ -f "WEEK-3/styles.css" ]; then cp WEEK-3/styles.css site/WEEK-3/; fi
+          # Copy favicon if any
+          if [ -f "WEEK-3/favicon.ico" ]; then cp WEEK-3/favicon.ico site/WEEK-3/; elif [ -f "WEEK-3/dist/favicon.ico" ]; then cp WEEK-3/dist/favicon.ico site/WEEK-3/; fi
+          # Copy compiled JS always
+          if compgen -G "WEEK-3/dist/*.js" > /dev/null; then cp WEEK-3/dist/*.js site/WEEK-3/; fi
           # Copy Week 4 build output (support Vite dist/ or CRA build/)
           if [ -d "WEEK-4/dist" ]; then mkdir -p site/WEEK-4 && cp -r WEEK-4/dist/* site/WEEK-4/; fi
           if [ -d "WEEK-4/build" ]; then mkdir -p site/WEEK-4 && cp -r WEEK-4/build/* site/WEEK-4/; fi
@@ -104,6 +112,21 @@ jobs:
           echo "Top-level week folders:"
           ls -la site | sed -n '1,200p' || true
           echo "Files under WEEK-3:" && (ls -la site/WEEK-3 || true)
+
+      - name: "Guard: ensure Week 3 index exists"
+        shell: bash
+        run: |
+          if [ ! -f "site/WEEK-3/index.html" ]; then
+            echo "ERROR: site/WEEK-3/index.html not found. Ensure WEEK-3/index.html exists or dist includes it." >&2
+            exit 1
+          fi
+
+      - name: Upload site as debug artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-debug
+          path: site
+          retention-days: 3
 
       - name: Upload Pages artifact (multi-week site)
         uses: actions/upload-pages-artifact@v3
