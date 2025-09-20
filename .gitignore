@@ -1,12 +1,6 @@
 # Dependencies
 node_modules/
 
-# Build output (TypeScript compiled files)
-dist/
-build/
-*.js
-*.js.map
-
 # Logs
 *.log
 npm-debug.log*
