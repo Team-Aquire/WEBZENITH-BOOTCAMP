@@ -6,7 +6,6 @@ build/
 # Ignore source maps globally, but allow JS except in build dirs
 *.js.map
 # Ignore compiled JS inside common build output directories
-**/dist/*.js
 **/build/*.js
 
 # Logs
