@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tasks.json",
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Week 4: Dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/WEEK-4" },
+      "isBackground": true,
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Week 4: Build",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/WEEK-4" },
+      "problemMatcher": ["$tsc"]
+    }
+  ]
+}

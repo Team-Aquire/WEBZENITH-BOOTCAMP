@@ -1,5 +1,26 @@
 # WEBZENITH-BOOTCAMP
 
+This repository tracks weekly projects and notes.
+
+## Week 4 – React Basics
+
+Project: Movie Search App (React + Vite + TypeScript)
+
+- Objectives:
+   - Understand React fundamentals and JSX
+   - Build reusable components; use props and `useState`
+   - Handle events and understand rendering/Virtual DOM basics
+   - Structure a small React project effectively
+
+- Run locally:
+   1. `cd WEEK-4`
+   2. `npm install`
+   3. (Optional) copy `.env.example` to `.env` and set `VITE_OMDB_API_KEY`
+   4. `npm run dev`
+
+- Deploy: Vercel or GitHub Pages (see `WEEK-4/README.md`)
+
+
 ## 🚀 Learning Web Development with Webzenith Bootcamp
 
 Welcome to the **Webzenith 100-Day Bootcamp!** This comprehensive program is designed to take you from a beginner to a proficient web developer in just 100 days, focusing on weekly learning modules and hands-on projects.
