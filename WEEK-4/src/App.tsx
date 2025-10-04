@@ -58,7 +58,6 @@ export default function App() {
     <div className="app">
       <header className="header">
         <h1>🎬 Movie Search</h1>
-        </div>
       </header>
 
       <main>
