@@ -58,15 +58,6 @@ export default function App() {
     <div className="app">
       <header className="header">
         <h1>🎬 Movie Search</h1>
-        <div className="apikey">
-          <label htmlFor="apikey">OMDb API Key:</label>
-          <input
-            id="apikey"
-            type="password"
-            placeholder="Enter your OMDb API key"
-            value={apiKey ?? ''}
-            onChange={(e) => setApiKey(e.target.value || undefined)}
-          />
         </div>
       </header>
 
